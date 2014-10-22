@@ -1,0 +1,9 @@
+﻿<div class="question">
+	<h1>Awesome work!</h1>
+	<p>You got {{stats.rightAnswers}} questions right, and {{stats.wrongAnswers}} wrong!</p>
+    <canvas id="the-chart"></canvas>
+    <div ng-show="isOnline()">
+        <h3>Want to share your success?<br />
+             <input type="button" class="btn btn-info" value="Share With the World!" ng-click="share(stats)"/></h3>
+    </div>
+</div>

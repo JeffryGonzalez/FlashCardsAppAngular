@@ -1,0 +1,113 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>IndexedDbDemo</title>
+</head>
+<body>
+    <div>
+    </div>
+    <script src="~/Scripts/jquery-2.1.1.js"></script>
+    <script>
+        window.Progressive = window.Progressive || {};
+        window.Progressive.shoppingList = Progressive.shoppingList || {};
+        Progressive.shoppingList.database = (function () {
+
+            if (!window.indexedDB) {
+                alert("Your browser doesn't support IndexedDb. good luck with that.");
+            }
+            var dbName = "shopping-list";
+            var version = 2;
+            var db;
+
+            function openDb() {
+                var d = new $.Deferred();
+                var request = indexedDB.open(dbName, version);
+                request.onsuccess = function(e) {
+                    db = e.target.result;
+                    d.resolve();
+                };
+                request.onerror = function(e) {
+                    console.error("Database Error");
+                    console.dir(e);
+                    d.reject(e.toString());
+                };
+                request.onupgradeneeded = function(e) {
+                    db = e.target.result;
+                    var objectStore = db.createObjectStore("items", { autoIncrement: true });
+                    objectStore.createIndex("store", "store", { unique: false });
+                };
+                return d.promise();
+            }
+
+            function addItem(item) {
+                var d = new $.Deferred();
+                var trans = db.transaction(["items"], "readwrite");
+                var items = trans.objectStore("items");
+                items.add(item);
+                trans.oncomplete = function() {
+                    d.resolve();
+                };
+                return d.promise();
+            }
+
+            function getAll() {
+                var d = new $.Deferred();
+                var items = db.transaction(["items"], "readonly").objectStore("items");
+                var result = [];
+                items.openCursor().onsuccess = function (event) {
+                    console.log("got the rows!");
+                    var cursor = event.target.result;
+
+                    if (!cursor) {
+                        d.resolve(result);
+                    } else {
+                        result.push(cursor.value);
+                        cursor.continue();
+                    }
+                };
+                
+                
+                return d.promise();
+            }
+
+            return {
+                open: openDb,
+                addItem: addItem,
+                getAll: getAll
+            };
+
+        })();
+
+        $(function () {
+
+            window.resetDatabase = function () {
+                indexedDB.deleteDatabase("shopping-list");
+            }
+            var domain = Progressive.shoppingList.database;
+
+            var openingDatabase = domain.open();
+            openingDatabase.done(function () {
+                console.info("Database is open and ready!");
+                domain.addItem({ name: "beans", store: "king supers", qty: 3, type: "black", 
+                    notes: [
+                        { by: "Jeff", text: "Get the good kind" },
+                        { by: "Jeff", text: "Make Sure they are vegetarian" }
+                        ]
+
+                });
+
+                //domain.getAll().done(function (items) {
+                //    console.dir(items);
+                //});
+
+            });
+        });
+    </script>
+</body>
+</html>

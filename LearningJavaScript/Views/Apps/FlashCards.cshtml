@@ -1,0 +1,303 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html manifest="/flashcards/manifest">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Flash Cards</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+    <link href='http://fonts.googleapis.com/css?family=Amatic+SC:400,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Covered+By+Your+Grace' rel='stylesheet' type='text/css'>
+    <style>
+        body {
+            background-color: rgb(240, 240, 240);
+        }
+
+        .small-card, .question {
+            background-image: url('data:image/gif;base64,R0lGODlhEgIiAfcAAP7/9a6m2fj3/Pbx+/76//Hy8v/8/93d7OHa8fr//8fB5q2o2NDO6LCt2M7H6KamprCq2Obm86ChuKirterBu+3r9uPh8fX178G83ra2yri33+jJx8G74e/v7+Lh7Zqam5aWp/v8/M7K48iqqLCt08LB2fHx+e3s9rq52+LKycXExPn5+q2p1PHy+MXF497d8ZeXnrW005eXtN7e8PX////29/78++/u8O7w66yqzPn7/vDw8L7Ax5eYmqWpo/j8+8K+4///8qamqayrwLS1uMKopunCwaum07y84Pz6+NPS7f38+tDO5vz8+piXmcTGwsXGyfz/9+LFwqmrrM3H5dXW4tTT6rWrq8LC0vPz97y60vn59d/a7bGo3ujJyfz6/8jI3cbJw+7u6tbGxKmqpcbE5peYl6alw8TFxv7398XC4JeZl+/v7LSz2vr996WpqPHv7KilzKiYmPr58rS018HLzOjp8PX19urq6sK+3snGxMnK0dbV3/v4/puXmMjLxP36/Pv+8sfA6cK55P/8+a+uyeHX9MXGxebn8cbGxZ+gssPIwPz9+N7Y8Oy+wNTS7Kempv75/MfHx8XFxtPS562m3bOy2LOu2bGr3q6n2P3//+7v7v7//v7//ainqPz///3//paWlv3//f7+/v7//P7/+v7/+///+///+v//+f39/v3+//z/+vPz+rSz3Pz//v7385eXl/7+///+/v/+/f7+/f//9/3+/f79//3+/v/+/P/++v3/+v3//P7/+f7+/MXFxf7/+P3+/P/++f7++66m2v3/+/z+/u3r9//++/z/+/z+///+9/z8//77/9DN7JeXlv7++sK45/z++9zc7/v9/fv//f7++MLCwv38/f3++f39++Xl8K2n2cbCx87N3+bl6uvq4uPj7+rQzObOzuTKxe3s8vH0+NbW6JaXl+Df8dbY6Nzd4f35/+rp7vz+/Pz//Pj2/f7++ebm9Ofn88LGx+jj8+PAv8G94cO94P/+/////P7//////f///v///yH5BAAAAAAALAAAAAASAiIBAAj/AP8JHKXqn6oQBQUqXMiwocOHECNKnEixosWLGDNq3Mixo8ePIEOKHEmypEmNoxAaHDWKSKhYoT6Y+fAhlM2bOHPq3Mmzp8+fQIMKHUq0qNGjSJMqXcq0qdOnUKNKnXp0Zqyr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') /*/content/images/indexcard.gif*/;
+            -ms-border-radius: 1px;
+            border-radius: 1px;
+            -webkit-transform: rotate(-1deg);
+            -moz-transform: rotate(-1deg);
+            -ms-transform: rotate(-1deg);
+            -o-transform: rotate(-1deg);
+            transform: rotate(-1deg);
+            -webkit-box-shadow: 7px 7px 17px 0px #323232;
+            -webkit-box-shadow: 7px 7px 17px 0px rgba(50, 50, 50, 0.75);
+            -moz-box-shadow: 7px 7px 17px 0px #323232;
+            -moz-box-shadow: 7px 7px 17px 0px rgba(50, 50, 50, 0.75);
+            box-shadow: 7px 7px 17px 0px rgba(50, 50, 50, 0.75);
+        }
+
+        .question {
+            position: relative;
+            height: 20em;
+            font-weight: bold;
+            font-family: 'Covered By Your Grace', cursive;
+            color: rgb(80, 80, 80);
+            padding: 20px;
+            width: 62%;
+            -webkit-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+            .question canvas {
+                position: absolute;
+                right: -44px;
+                bottom: 10px;
+            }
+
+        .q-buttons {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+        }
+
+            .q-buttons input {
+                font-size: 2em;
+            }
+
+        .question h1, .question h2 {
+            font-family: 'Covered By Your Grace', cursive;
+            -webkit-transform: rotate(3deg);
+            -moz-transform: rotate(3deg);
+            -ms-transform: rotate(3deg);
+            -o-transform: rotate(3deg);
+            transform: rotate(3deg);
+        }
+
+        .small-card h2 {
+            color: red;
+        }
+
+        .page-header h1 {
+            font-weight: bold;
+            font-family: 'Covered By Your Grace', cursive;
+            font-size: 6em;
+        }
+
+        .page-header {
+            color: red;
+        }
+
+            .page-header h1 > small {
+                color: black;
+                font-size: .7em;
+            }
+
+
+
+        li.small-card h2 {
+            font-weight: bold;
+            font-family: 'Covered By Your Grace', cursive;
+        }
+    </style>
+</head>
+<body ng-app="flashCardApp">
+    <script type="text/ng-template" id="/jsapps/flashcards/templates/create.html">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+
+                <header>
+                    <h2>Create New Deck</h2>
+                </header>
+                <form role="form">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" ng-model="newDeck.title" ng-change="makeSlug(newDeck.title)" class="form-control" id="title" placeholder="Title For Your Deck">
+                    </div>
+                    <div class="form-group">
+                        <label>Slug</label>
+                        <span>{{newDeck.slug}}</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="question">Question</label>
+                        <input type="text" ng-model="newQuestion" " class="form-control"  placeholder="Question.">
+                    </div>
+                    <div class="form-group">
+                        <label for="answer">Answer</label>
+                        <input type="text" ng-model="newAnswer" class="form-control"  placeholder="The right answer.">
+                    </div>
+                    <div>
+                        <input type="button" value="Add Card To Deck" ng-click="addCard(newQuestion, newAnswer)" class="btn btn-info"/>
+                    </div>
+                </form>
+                <ul class="list-unstyled">
+                    <li ng-repeat="question in newDeck.cards">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                {{question.q}}<br />
+                            </div>
+                            <div class="panel-body">
+                                {{question.a}}
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div>
+                    <input ng-disabled="notReady()" type="button" class="btn btn-lg btn-success" value="Save This Deck!" ng-click="save(newDeck)" />
+                    <input type="button" class="btn btn-lg btn-danger" value="Nevermind. Go back." ng-click="cancel()"/>
+                </div>
+            </div>
+        </div>
+
+    </script>
+
+
+
+    <div class="container">
+        <header class="page-header">
+            <h1>Flash Cards<small> Learn you a thing or two.</small></h1>
+        </header>
+        <nav>
+            <ul class="nav nav-pills">
+                <li class="active"><a href="#/stacks">Study</a></li>
+                <li><a href="#">Stats</a></li>
+                <li><a href="#/create">Create</a></li>
+            </ul>
+        </nav>
+        <div ui-view></div>
+
+    </div>
+    <script src="~/Scripts/angular.js"></script>
+    <script src="~/Scripts/angular-ui-router.min.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script src="~/additional/chart.js"></script>
+
+    <script>
+        var app = angular.module("flashCardApp", ['ui.router'])
+            .config(function ($stateProvider, $urlRouterProvider) {
+
+                $urlRouterProvider.otherwise('/stacks');
+
+                $stateProvider.state('create', {
+                    url: '/create',
+                    templateUrl: "/jsapps/flashcards/templates/create.html",
+                    controller: function ($scope, slugService, $state, flashCardPersistence) {
+                        $scope.makeSlug = function (title) {
+                            $scope.newDeck.slug = slugService.slugify(title);
+                        };
+
+                        $scope.newDeck = {};
+                        $scope.newDeck.cards = [];
+
+                        $scope.addCard = function (q, a) {
+                            $scope.newDeck.cards.push({ q: q, a: a });
+                            $scope.newQuestion = "";
+                            $scope.newAnswer = "";
+                            console.log($scope.newDeck);
+                        };
+
+                        $scope.notReady = function () {
+                            return !($scope.newDeck.cards.length > 0 && $scope.newDeck.title != "");
+                        };
+                        $scope.save = function (deck) {
+                            flashCardPersistence.open().then(function () {
+                                flashCardPersistence.addItem(deck).then(function () {
+                                    $state.go('stacks');
+                                });
+                            });
+                        };
+                        $scope.cancel = function () {
+                            $state.go('stacks');
+                        };
+                    }
+                });
+
+
+                $stateProvider.state('stacks', {
+                    url: '/stacks',
+                    controller: "FlashCardController",
+                    templateUrl: "/jsapps/flashcards/templates/stacks.html"
+                });
+
+
+                $stateProvider.state('stacks.quiz', {
+                    "abstract": true,
+                    url: '/quiz/:slug',
+                    resolve: {
+                        currentStack: function (flashCardPersistence, $stateParams, $q) {
+                            var slug = $stateParams.slug;
+                            var d = $q.defer();
+                            return flashCardPersistence.open().then(function () {
+                                flashCardPersistence.getBySlug(slug).then(function (cs) {
+                                    d.resolve(cs);
+                                });
+                                return d.promise;
+                            });
+                        }
+                    },
+                    template: "<div ui-view></div>"
+                })
+                    .state("stacks.quiz.start", {
+                        url: '/start',
+                        controller: function ($scope, currentStack) {
+                            console.log(currentStack);
+                            $scope.data.currentStack = currentStack;
+                        },
+                        templateUrl: "/jsapps/flashcards/templates/stacks.quiz.start.html"
+                    })
+                    .state('stacks.quiz.summary', {
+                        url: '/summary',
+                        templateUrl: '/jsapps/flashcards/templates/stacks.quiz.summary.html',
+                        controller: function ($scope, $state) {
+                            $scope.share = function (share) {
+                                if(navigator.onLine) {
+                                    window.connection.send("guess what, NAME just got " + share.rightAnswers);
+                                }
+                            };
+                            if (!$scope.showingSummary) {
+                                $state.go('stacks');
+                            }
+                        }
+                    }).state("stacks.quiz.begin", {
+                        url: "/:id",
+                        controller: "QuizController",
+                        templateUrl: "/jsapps/flashcards/templates/stacks.quiz.begin.html"
+                    });
+            });
+    </script>
+    <script src="~/jsapps/flashcards/controllers/QuizController.js"></script>
+    <script src="~/jsapps/flashcards/controllers/FlashCardController.js"></script>
+    <script src="~/jsapps/flashcards/services/slugService.js"></script>
+    <script src="~/jsapps/flashcards/services/flashCardPersistence.js"></script>
+    <script src="~/Scripts/jquery-1.9.1.js"></script>
+    <script src="~/Scripts/jquery.signalR-1.2.2.js"></script>
+    <script src="~/Scripts/toastr.js"></script>
+    <script>
+        
+
+        window.connection = "";
+        $(function () {
+
+            window.applicationCache.addEventListener('updateready', function(e) {
+                if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+                    if (confirm("Update your app, there is a new version!")) {
+                        window.location.reload();
+                    }
+                }
+            },false);
+
+            if (navigator.onLine) {
+                connection = $.connection('/stats');
+
+                connection.received(function (data) {
+                    toastr.info(data);
+                });
+
+                connection.start().done(function () {
+                    toastr.info("Connection Is ready");
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

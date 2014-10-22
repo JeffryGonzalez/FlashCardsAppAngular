@@ -1,0 +1,115 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Employees</title>
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <input id="get-employees" value="Get Employees" type="button" />
+    </div>
+    <div>
+        <input id="employee-id" /> <input type="button" id="get-employee" value="Get Employee" />
+    </div>
+
+    <script src="~/Scripts/jquery-2.1.1.js"></script>
+    <script src="~/Scripts/toastr.js"></script>
+    <script>
+        window.Progressive = window.Progressive || {};
+        window.Progressive.employees = (function () {
+            var rootUri = "/api/employees";
+            return {
+                getAllEmployees: function () {
+                    var p = new $.Deferred();
+                    $.getJSON(rootUri).done(function (employees) {
+                        p.resolve(employees);
+                    });
+                    return p.promise();
+                },
+                getAllDepartments: function () {
+                    var p = new $.Deferred();
+                    p.resolve(['Dev', 'QA', 'STE', 'HR', 'Support']);
+                    return p.promise();
+                },
+                getAllEmployeesWithDepartments: function () {
+                    var p = new $.Deferred();
+                    var gettingEmployees = this.getAllEmployees();
+                    var gettingDepartments = this.getAllDepartments();
+                    $.when(gettingDepartments, gettingEmployees).done(function (depts, employees) {
+                        p.resolve({ employees: employees, departments: depts });
+                    });
+
+                    return p.promise();
+                },
+                getEmployee: function (id) {
+                    var p = new $.Deferred();
+                    var gettingEmployee = $.getJSON(rootUri + "/" + id);
+                    gettingEmployee.done(function (employee) {
+                        p.resolve(employee);
+                    });
+                    gettingEmployee.error(function (error) {
+                        if (error.status === 404) {
+                            p.reject("No Such Employee");
+                        } else {
+                            p.reject("Unknown error. Run.");
+                        }
+                    });
+                    return p.promise();
+                }
+            }
+
+        })();
+
+
+        $(function () {
+            var employeeService = Progressive.employees;
+
+            $('#get-employee').click(function () {
+                var id = $('#employee-id').val();
+
+                var gettingEmployee = employeeService.getEmployee(id);
+
+                toastr.info("Getting your employee");
+
+                gettingEmployee.done(function (employee) {
+                    toastr.success("That is " + employee.name);
+                });
+
+                gettingEmployee.fail(toastr.error);
+
+                gettingEmployee.always(function () {
+                    $('#employee-id').focus().select();
+                });
+            });
+
+            $('#get-employees').click(function () {
+               
+                var gettingEmployees = employeeService.getAllEmployees();
+                var gettingDepartments = employeeService.getAllDepartments();
+
+                toastr.info("Getting your data");
+
+                gettingEmployees.done(function (employees) {
+                    toastr.success("I've got your employees right here!");
+                    console.log(employees);
+                });
+
+                gettingDepartments.done(function (depts) {
+                    toastr.success("Got your departments");
+                    console.log(depts);
+                });
+
+                $.when(gettingDepartments, gettingEmployees).done(function () {
+                    toastr.success("Got them both now. Do your thang!");
+                });
+            });
+        });
+    </script>
+</body>
+</html>

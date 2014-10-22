@@ -1,0 +1,38 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SimpleCalculator</title>
+</head>
+<body>
+    <div id="calculator">
+        <div>
+            <input type="text" value="" id="num1"/>
+            <input type="text" value="" id="num2" />
+        </div>
+        <div>
+            <input type="button" id="add" value="+" />
+            <input type="button" id="subtract" value="-" />
+            <input type="button" id="multiply" value="*" />
+            <input type="button" id="divide" value="/" />
+        </div>
+        <div>
+            <h1 id="answer"></h1>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-2.1.1.js"></script>
+    <script src="~/src/Progressive/utils/math.js"></script>
+    <script src="~/src/plugins/calculator.js"></script>
+    <script>
+        // Main method!
+        $(function () {
+            $('#calculator').calculator();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+﻿<div class="question">
+	<div ng-switch on="cardType">
+		<div ng-switch-when="question">
+			<h1>{{data.currentQuestion.q}}</h1>
+			<div class="q-buttons">
+				<input type="button" class="btn btn-success" ng-click="flip()" value="Flip Card" />
+			</div>
+		</div>
+		<div ng-switch-when="answer">
+			<h1>Answer: {{data.currentQuestion.a}}</h1>
+			<div class="q-buttons">
+				<input type="button" class="btn btn-success" ng-click="nextCard(true)" value="I was Right!" />
+				<input type="button" class="btn btn-danger" ng-click="nextCard(false)" value="Dangit!" />
+
+			</div>
+		</div>
+	</div>
+</div>

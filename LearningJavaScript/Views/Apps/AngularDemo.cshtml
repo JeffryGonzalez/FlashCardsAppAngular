@@ -1,0 +1,39 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AngularDemo</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+</head>
+<body ng-app="calculatorApp">
+    <div ng-controller="CalculatorController" class="container">
+        <input ng-model="num1" /><input ng-model="num2" /><input class="btn btn-success" type="button" value="Add" ng-click="add(num1, num2)" />
+        <h2>The Answer is: {{answer}} </h2>
+    </div>
+    <script src="~/Scripts/angular.js"></script>
+    <script src="~/src/Progressive/utils/math.js"></script>
+    <script>
+        var app = angular.module("calculatorApp", []);
+
+        app.controller("CalculatorController", function ($scope, calculatorService) {
+            $scope.answer = 0;
+            $scope.add = function (a, b) {
+                $scope.answer = calculatorService.add(parseFloat(a),parseFloat(b));
+            }
+        });
+
+        app.service("calculatorService", function () {
+            var domain = Progressive.utils.math;
+
+            return {
+                add: domain.add
+            }
+        });
+    </script>
+</body>
+</html>

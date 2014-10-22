@@ -1,0 +1,23 @@
+﻿<div class="row" ng-hide="playing" >
+	<div class="col-md-3" ng-hide="data.quizzing">
+		<header>
+			<h3>Your Stacks</h3>
+		</header>
+		<ul class="list-unstyled">
+			<li class="well well-sm small-card" ng-repeat="stack in data.stacks">
+				<h2>{{stack.title}}</h2>
+				<div>
+					<p><small>Deck has {{stack.cards.length}} cards</small></p>
+					<a ng-href="#/stacks/quiz/{{stack.slug}}/start" class="btn btn-success btn-xs" ng-disabled="currentStack">Study</a>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div class="col-md-9">
+		<header>
+			<h3>Study</h3>
+		</header>
+		<div ui-view></div>
+		
+	</div>
+</div>

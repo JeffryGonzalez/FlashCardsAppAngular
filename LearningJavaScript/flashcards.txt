@@ -1,0 +1,41 @@
+﻿CACHE MANIFEST
+
+#version 1.3 9-19-2014
+# updated from good to awesome!!
+
+CACHE:
+
+#images
+
+
+#internal HTML documents
+http://localhost:60533/apps/flashcards/
+
+#style sheets
+http://fonts.googleapis.com/css?family=Amatic+SC:400,700
+http://fonts.googleapis.com/css?family=Covered+By+Your+Grace
+http://localhost:60533/Content/bootstrap.css
+http://localhost:60533/Content/toastr.css
+http://localhost:60533/jsapps/flashcards/templates/create.html
+http://localhost:60533/jsapps/flashcards/templates/stacks.html
+http://localhost:60533/jsapps/flashcards/templates/stacks.quiz.begin.html
+http://localhost:60533/jsapps/flashcards/templates/stacks.quiz.start.html
+http://localhost:60533/jsapps/flashcards/templates/stacks.quiz.summary.html
+http://localhost:60533/jsapps/flashcards/templates/stacks.start.html
+#style sheet images
+
+#javascript files
+http://localhost:60533/Scripts/angular.js
+http://localhost:60533/Scripts/angular-ui-router.min.js
+http://localhost:60533/Scripts/underscore.js
+http://localhost:60533/additional/chart.js
+http://localhost:60533/jsapps/flashcards/controllers/QuizController.js
+http://localhost:60533/jsapps/flashcards/controllers/FlashCardController.js
+http://localhost:60533/jsapps/flashcards/services/slugService.js
+http://localhost:60533/jsapps/flashcards/services/flashCardPersistence.js
+http://localhost:60533/Scripts/jquery-1.9.1.js
+http://localhost:60533/Scripts/jquery.signalR-1.2.2.js
+http://localhost:60533/Scripts/toastr.js
+
+NETWORK:
+*

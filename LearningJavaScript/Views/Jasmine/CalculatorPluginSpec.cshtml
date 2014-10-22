@@ -1,0 +1,43 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Jasmine Spec Runner</title>
+
+    <link rel="shortcut icon" type="image/png" href="/Content/jasmine/jasmine_favicon.png">
+    <link rel="stylesheet" type="text/css" href="/Content/jasmine/jasmine.css">
+    <script type="text/javascript" src="/Scripts/jasmine/jasmine.js"></script>
+    <script type="text/javascript" src="/Scripts/jasmine/jasmine-html.js"></script>
+    <script type="text/javascript" src="/Scripts/jasmine/boot.js"></script>
+    <script src="/Scripts/jquery-2.1.1.js"></script>
+    <script src="/src/Progressive/utils/math.js"></script>
+
+    <!-- we aren't actually usin this, we are going to mock it! -->
+
+    <!-- include source files here... -->
+    <script src="/src/plugins/calculator.js"></script> <!-- SUT System Under Test -->
+    <!-- include spec files here... -->
+    <script src="/specs/Calculator_Specs.js"></script>
+</head>
+
+<body>
+     <div id="calculator">
+        <div>
+            <input type="text" value="" id="num1"/>
+            <input type="text" value="" id="num2" />
+        </div>
+        <div>
+            <input type="button" id="add" value="+" />
+            <input type="button" id="subtract" value="-" />
+            <input type="button" id="multiply" value="*" />
+            <input type="button" id="divide" value="/" />
+        </div>
+        <div>
+            <h1 id="answer"></h1>
+        </div>
+    </div>
+</body>
+</html>

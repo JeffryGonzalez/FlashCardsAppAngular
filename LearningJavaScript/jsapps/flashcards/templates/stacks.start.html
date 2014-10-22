@@ -1,0 +1,24 @@
+﻿<div ng-hide="showingSummary">
+	<div ng-show="currentStack">
+		<header>
+			<h5>Studying {{ currentStack.title }}</h5>
+		</header>
+		<div ng-show="showingQuestion">
+			<h3>{{currentCard.q}}</h3>
+			<div>
+				<input type="button" class="btn btn-info" value="Flip Card" ng-click="flipCard()" />
+			</div>
+		</div>
+		<div ng-hide="showingQuestion">
+			<h3>Answer: {{currentCard.a}}</h3>
+			<div>
+				<input type="button" class="btn btn-success" value="I Was Right!" ng-click="nextCard(true)" />
+				<input type="button" class="btn btn-danger" value="I Was Wrong!" ng-click="nextCard(false)" />
+			</div>
+		</div>
+	</div>
+</div>
+<div ng-show="showingSummary">
+	<h1>Good Job!</h1>
+	<p>You got {{stats.rightAnswers}} right answers! and {{stats.wrongAnswers}} wrong answers!</p>
+</div>
