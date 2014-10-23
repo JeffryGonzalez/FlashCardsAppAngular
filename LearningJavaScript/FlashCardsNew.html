@@ -1,0 +1,308 @@
+﻿@section styles {
+<style>
+	html, body, #full {
+		height: 100%;
+		min-height: 100%;
+		margin: 0;
+		padding: 0;
+	}
+</style>
+}
+
+<div ng-app="flashCardApp" style="background-color: orange" id="full">
+	<script type="text/ng-template" id="/apps/flashcards/templates/decks.html">
+		<div class="row">
+			<div class="col-md-3 ">
+				<header><h3>Available Decks</h3></header>
+				<ul class="list-unstyled">
+					<li class="well" ng-repeat="deck in decks">
+						<header>
+							<h4>{{deck.title}}</h4>
+							<p>{{deck.description}}</p>
+						</header>
+						<div>
+							<a ng-href="#/decks/study/{{deck.slug}}/start" class="btn btn-success" ng-disabled="studying">Study!</a>
+							<div>(maybe some stats and stuff here later)</div>
+						</div>
+					</li>
+
+				</ul>
+			</div>
+			<div ui-view class="col-md-9"></div>
+		</div>
+
+
+	</script>
+	<nav>
+		<ul class="nav nav-tabs">
+			<li><a class="active" href="#/decks">Decks</a></li>
+			<li><a href="#/create">Create</a></li>
+			<li><a href="#/share">Share</a></li>
+		</ul>
+	</nav>
+	<div ui-view></div>
+
+</div>
+
+@section scripts {
+<script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/angular-ui-router.js"></script>
+<script src="~/Scripts/underscore.js"></script>
+
+<script>
+        var app = angular.module('flashCardApp', ['ui.router']);
+        app.config([
+            '$stateProvider',
+            '$urlRouterProvider',
+            function($stateProvider, $urlRouterProvider) {
+                $urlRouterProvider.otherwise("/decks");
+
+                $stateProvider.state('decks', {
+                    url: '/decks',
+                    templateUrl: "/apps/flashcards/templates/decks.html",
+                    controller: "DecksController"
+                });
+
+                $stateProvider.state('create', {
+                    url: '/create',
+                    template: "<h1>Creating decks here!</h1>"
+                });
+
+                $stateProvider.state('share', {
+                    url: "/share",
+                    template: "<h1>Share your awesome decks or get new ones!</h1>"
+                });
+
+                // #/decks/study/star-wars-trivia/start
+                $stateProvider.state("decks.study", {
+                    "abstract": true,
+                    url: '/study/:slug',
+                    // we'll come back here in a minute.
+                    resolve: {
+                        currentStack: function(flashCardPersistence, $stateParams, $q) {
+                            var slug = $stateParams.slug;
+                            var d = $q.defer();
+                            flashCardPersistence.open().then(function() {
+                                flashCardPersistence.getBySlug(slug).then(function(cs) {
+                                    console.log(cs);
+                                    d.resolve(cs);
+                                });
+                            });
+                            return d.promise;
+                        }
+                    },
+                    template: "<div ui-view></div>"
+
+                });
+
+                $stateProvider.state("decks.study.start", {
+                    url: "/start",
+                    //templateUrl: "/apps/flashcards/templates/decks.study.start.html",
+                    controller: function($scope, currentStack, $rootScope) {
+                        console.log(currentStack);
+                        $scope.currentStack = currentStack;
+                        $rootScope.studying = true;
+                    },
+                    template: "<h1>You are about to study {{currentStack.title}}</h1>"
+                });
+
+            }
+        ]);
+
+
+        app.controller("DecksController", [
+            '$scope',
+            'flashCardPersistence',
+            function ($scope, flashCardPersistence) {
+
+                //$scope.decks = flashCardPersistence.getAllDecks();
+                flashCardPersistence.getAllDecks().then(function(decks) {
+                    $scope.decks = decks;
+                });
+            }
+        ]);
+
+        app.service('flashCardPersistence', [
+            '$q',
+            'slugService',
+            function($q, slugService) {
+                if (!window.indexedDB) {
+                    alert("Your browser stinks. Update!");
+                    return {};
+                }
+
+                var dbName = "flash-cards";
+                var version = 2;
+                var db;
+
+
+                var sampleDecks = [
+                    {
+                        title: "Star Wars Trivia",
+                        description: "Test your skills with the force!",
+                        questions: [
+                            { q: "What is Han Solo's Middle Initial?", a: "D" },
+                            { q: "What are the little droid stealing dudes called?", a: "Jawas" },
+                            { q: "What is Padme's last name?", a: "Naberrie" }
+                        ]
+                    },
+                    {
+                        title: "JavaScript Concepts",
+                        description: "Become a JavaScript Ninja!",
+                        questions: [
+                            { q: "What is the keyword for declaring a variable?", a: "var" },
+                            { q: "Are there lambdas in JavaScript?", a: "Nope" },
+                            { q: "Is forEach a keyword in JavaScript?", a: "Nope. A method."}
+                        ]
+                    },
+                    {
+                        title: "IndexedDb For Masochists", description: "Databases have never been harder! You'll love it!",
+                        questions: [
+                            { q: "True or false, transactions are not required for read operations.", a: "false" },
+                            { q: "True or False, Indexes must be unique.", a: "false" },
+                            {q: "The IndexedDB storage is shared by all browsers. True or False", a: "No way."}
+                        ]
+                    }
+                ];
+
+                sampleDecks.forEach(function(deck) {
+                    deck.slug = slugService.slugify(deck.title);
+                });
+
+                initialize();
+
+                function initialize() {
+                    var d = $q.defer();
+                    openDb().then(function() {
+                        getAll().then(function(rows) {
+                            if (rows.length === 0) {
+                                // we have no data!
+                                var promises = [];
+                                sampleDecks.forEach(function(deck) {
+                                    promises.push(addItem(deck));
+                                });
+                                $q.all(promises).then(d.resolve());
+                            } else {
+                                d.resolve();
+                            }
+                        });
+                    }, function(error) {
+                        console.error(error);
+                        d.reject(error.toString());
+                    });
+                    return d.promise;
+                }
+
+                function getBySlug(slug) {
+                    var d = $q.defer();
+                    var objectStore = db.transaction(["stacks"], "readonly").objectStore("stacks");
+                    var index = objectStore.index("slug");
+                    var get = index.get(slug);
+                    get.onsuccess = function() {
+                        d.resolve(this.result);
+                    };
+                    get.onerror = function() {
+                        console.log("Error getting " + slug);
+                        d.reject("Error getting slug!");
+                    };
+                    return d.promise;
+                }
+
+                function addItem(item) {
+                    var d = $q.defer();
+                    var trans = db.transaction(["stacks"], "readwrite");
+                    var items = trans.objectStore("stacks");
+                    items.add(item);
+                    trans.onComplete = function() {
+                        d.resolve();
+                    };
+                    return d.promise;
+                }
+
+                function getAll() {
+                    var d = $q.defer();
+                    var items = db.transaction(["stacks"], "readonly").objectStore("stacks");
+                    var result = [];
+                    var tx = items.openCursor();
+                    tx.onsuccess = function(event) {
+                        var cursor = this.result;
+                        if (cursor) {
+                            result.push(cursor.value);
+                            cursor.continue();
+                        } else {
+                            d.resolve(result);
+                        }
+                    };
+                    tx.onerror = function(e) {
+                        console.error(e);
+                        d.reject(e.toString());
+                    };
+
+                    return d.promise;
+
+                }
+
+                function openDb() {
+                    var d = $q.defer();
+                    var request = indexedDB.open(dbName, version);
+                    request.onsuccess = function() {
+                        db = this.result;
+                        d.resolve();
+                    };
+                    request.onerror = function(e) {
+                        console.error("Error opening database");
+                        console.log(e);
+                        d.reject(e.toString());
+                    };
+
+                    request.onupgradeneeded = function(e) {
+                        db = this.result;
+                        console.warn("Updating the database");
+                        if (!db.objectStoreNames.contains("stacks")) {
+                            var objectStore = db.createObjectStore("stacks", { autoIncrement: true });
+                            objectStore.createIndex("slug", "slug", { unique: true });
+                            objectStore.success = function() {
+                                d.resolve();
+                            };
+                        }
+                    };
+                    return d.promise;
+                }
+
+                return {
+                    open: openDb,
+                    getAllDecks: function() {
+                        return openDb().then(getAll);
+                    },
+                    getBySlug: getBySlug
+                };
+            }
+        ]);
+
+        app.service("slugService", function() {
+
+            // take "the emprire strikes back!! -> the-empire-strikes-back
+            function slugify(str) {
+                str = str.replace(/^\s+|\s+$/g, ''); // trim
+                str = str.toLowerCase();
+
+                // remove accents, swap Ã± for n, etc
+                var from = "Ã Ã¡Ã¤Ã¢Ã¨Ã©Ã«ÃªÃ¬Ã­Ã¯Ã®Ã²Ã³Ã¶Ã´Ã¹ÃºÃ¼Ã»Ã±Ã§Â·/_,:;";
+                var to = "aaaaeeeeiiiioooouuuunc------";
+                for (var i = 0, l = from.length; i < l; i++) {
+                    str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+                }
+
+                str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+                    .replace(/\s+/g, '-') // collapse whitespace and replace by -
+                    .replace(/-+/g, '-'); // collapse dashes
+
+                return str;
+            }
+
+            return {
+                slugify: slugify
+            };
+        });
+</script>
+}
